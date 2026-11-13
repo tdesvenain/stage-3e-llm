@@ -1,0 +1,7 @@
+# Le fichier .env contient la clé secrète : il ne part JAMAIS dans git.
+.env
+__pycache__/
+.venv/
+.idea/
+.vscode/
+.claude/
