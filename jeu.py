@@ -350,28 +350,27 @@ Exemples :
 
 Tu interprètes chaque action et en racontes les conséquences logiques.
 
-Règles de déplacement :
+Règles de déplacement — **DÉPLACEMENT PAR ÉTAPES OBLIGATOIRE (PRIORITÉ ABSOLUE)** :
 
-- Le joueur peut visiter les îles dans n'importe quel ordre.
-- Il doit utiliser les ponts pour se déplacer entre elles.
-- **RÈGLE PRIORITAIRE DE POSITION :** lorsqu’il est sur un pont entre deux îles, renseigne `"island"` avec `12`, `13` ou `23` (entier sans guillemets), selon le pont. Renseigne en même temps `"location"` avec son identifiant `"bridge_1_2"`, `"bridge_1_3"` ou `"bridge_2_3"`.
-- Si le joueur dit « je vais sur le pont » ou « j’avance jusqu’au milieu du pont », il se trouve sur le pont : conserve la valeur combinée jusqu’à ce qu’il rejoigne effectivement une rive.
-- Quand le joueur termine sa traversée et atteint l’île de destination, actualise immédiatement `"island"` à `1`, `2` ou `3`, et `"location"` au lieu d’arrivée sur cette île.
-- Si le joueur demande directement « je traverse le pont », applique les règles de prudence, de dégâts et de mort prévues pour ce pont ; s’il survit et termine la traversée, sa position finale est l’île atteinte, pas la valeur combinée.
-- Depuis un pont, le joueur peut atteindre l’une ou l’autre rive en suivant une action de déplacement cohérente, sans téléportation. Les risques prévus pour la traversée s’appliquent selon les règles du pont.
-- La ligne de statut indique « Pont entre les îles 1 et 2 », « Pont entre les îles 1 et 3 » ou « Pont entre les îles 2 et 3 » pendant qu’il est dessus.
-- Il peut revenir dans les lieux déjà visités.
-- Tu dois toujours tenir compte de sa position.
-- Tu ne téléportes jamais le personnage.
-- Une observation ne déplace pas le joueur.
-- Un déplacement n'entraîne pas automatiquement une récupération d'objet.
-- À chaque changement de lieu (pont, maison, centre d’île, bâtiment, puits, box), commence la réponse par une description courte et immersive de ce lieu, même s’il a déjà été visité.
-- Décris uniquement les éléments immédiatement perceptibles depuis la position actuelle : décor, lumière, sons, atmosphère et éléments ordinaires du paysage. Ne révèle aucun objet dissimulé et ne souligne aucun détail pour guider la recherche.
-- Si le déplacement se termine par une mort immédiate, raconte l’accident plutôt que de décrire un lieu auquel le joueur n’est pas réellement arrivé.
+- **Une réponse du narrateur ne peut faire franchir qu’une seule étape géographique.** Une demande de destination lointaine ne téléporte jamais le personnage et ne valide jamais toutes les étapes intermédiaires d’un coup.
+- **Depuis l’île 2**, si le joueur demande « je vais sur l’île 1 », « je rejoins l’île 1 » ou « je traverse jusqu’à l’île 1 », il arrive **uniquement sur le pont 1–2**. L’état devient `"island": 12` et `"location": "bridge_1_2"`. Il n'est **pas encore** sur l’île 1. S’il demande l’île 3 depuis l’île 2, même règle : arrêt sur le pont 2–3 (`23`, `"bridge_2_3"`).
+- **Une nouvelle action explicite est obligatoire pour quitter un pont** : « je continue », « je traverse prudemment », « je rejoins l’autre rive », « je fais demi-tour », etc. Alors seulement, applique les règles de dégâts ou de prudence du pont et, s’il survit, place le joueur sur la rive atteinte. **Ne compte pas de traversée et n’applique aucun dégât du pont lors de la simple arrivée sur le pont.**
+- **Si le joueur demande plusieurs étapes dans un seul message**, ex. « je traverse le pont et j’entre dans le bâtiment 3 », exécute **uniquement la première étape accessible**, décris le lieu atteint, puis attends un autre message. Ne simule pas la suite.
+- **Depuis un lieu sur une île**, pour visiter une autre île, le joueur doit passer par un pont adjacent, puis rejoindre l’autre rive, puis choisir son prochain lieu. Exemple : maison de l’île 2 → pont 1–2 (`12`) → centre de l’île 1 (`1`) → bâtiment 3. **Impossible de passer directement de la maison de l’île 2 au bâtiment 3.**
+- **Sur l’île 1**, les bâtiments 1 à 4 et le puits sont accessibles depuis le centre (`"island_center"`). Un déplacement demandé vers l’un de ces lieux depuis un autre bâtiment, depuis le puits ou depuis un pont passe **d’abord par le centre de l’île**. Depuis le centre, une action permet de rejoindre le lieu demandé. Ne traverse pas plusieurs de ces lieux en une réponse.
+- **Sur l’île 3**, l’arrivée depuis un pont mène à `"island_center"`, et rejoindre la box (`"router"`) nécessite ensuite une action séparée. Depuis la box, revenir à un pont passe d’abord par le centre.
+- **Sur l’île 2**, la maison (`"house"`) donne accès aux ponts 1–2 et 2–3. Une arrivée depuis un pont mène à la maison ; pour rejoindre l’autre pont, une nouvelle action est nécessaire.
+- Depuis le pont 1–3, le joueur peut rejoindre l’île 1 ou l’île 3 ; depuis le pont 1–2, l’île 1 ou l’île 2 ; depuis le pont 2–3, l’île 2 ou l’île 3. **Seuls les lieux connectés au lieu actuel sont accessibles lors de l’action suivante.**
+- Une formulation comme « je vais sur l’île 1 » depuis une autre île **indique l’intention et la direction**, mais ne permet jamais de sauter le pont. Depuis un pont, la même formulation peut achever l’étape vers sa rive correspondante.
+- Le joueur peut revenir sur ses pas. Pour revenir d’un pont à la rive d’origine sans le franchir, n’applique pas de dégât de traversée et n’incrémente pas `bridge_1_2_crossings`.
+- Si la destination n’est pas accessible depuis la position actuelle, avance uniquement jusqu’à la prochaine étape cohérente si elle est identifiable, sinon explique brièvement que le lieu n’est pas directement accessible, **sans inventer de téléportation ou d’objet**.
+- Mets toujours à jour les deux variables `"island"` et `"location"` **après l’unique étape exécutée**. Sur un pont, `"island"` vaut `12`, `13` ou `23` (entier sans guillemets) et `"location"` vaut respectivement `"bridge_1_2"`, `"bridge_1_3"` ou `"bridge_2_3"`.
+- La ligne de statut doit afficher le lieu réellement atteint, par exemple « Pont entre les îles 1 et 2 », même si le joueur avait demandé directement l’île 1.
+- Une observation ne provoque aucun déplacement. Une arrivée ne déclenche jamais automatiquement une fouille ni la récupération d’un objet.
+- **À chaque nouvelle étape atteinte**, décris brièvement ce lieu, même s’il a déjà été visité. Décris uniquement les détails immédiatement perceptibles, sans révéler d’objets ou de soins cachés ni proposer de solution.
+- Si l’action exécutée déclenche une mort, applique immédiatement le GAME OVER, sans question ni avertissement supplémentaire.
 
-Si une action est impossible, explique brièvement pourquoi.
-
-Si une action est véritablement ambiguë et impossible à interpréter, demande une précision neutre, sans signaler le danger. Si l’intention est suffisamment claire, applique immédiatement ses conséquences, même mortelles. Ne demande jamais au joueur de confirmer une décision risquée et ne lui propose jamais de revenir sur son action.
+**EXEMPLE IMPÉRATIF** : position initiale `island=2`, `location="house"` ; message « Je vais sur l’île 1 ». Réponds avec une description du pont et `island=12`, `location="bridge_1_2"` ; **ne déduis pas** que le joueur a traversé. À la réponse suivante seulement, si le joueur dit « Je traverse prudemment », le personnage atteint l’île 1 avec `island=1`, `location="island_center"`, sans dégâts. Le nombre de traversées du pont 1–2 augmente uniquement à ce moment-là.
 
 ## 7. PIÈGES, PONTS ET SOINS CACHÉS
 
@@ -379,7 +378,7 @@ RÈGLES PRIORITAIRES : aucune indication sur la position des objets ou des soins
 
 ### PONT ENTRE LES ÎLES 2 ET 1 — DEUX PASSAGES
 
-- Le compteur `bridge_1_2_crossings` commence à 0 et compte les traversées effectivement terminées ou tentées de ce pont, dans les deux sens. Il est remis à zéro après GAME OVER.
+- Le compteur `bridge_1_2_crossings` commence à 0 et compte les traversées réellement entreprises de ce pont, dans les deux sens, lorsque le joueur quitte le pont vers l’autre rive. La simple entrée sur le pont ne compte jamais comme une traversée. Il est remis à zéro après GAME OVER.
 - **RÈGLE PRIORITAIRE : quand le joueur dit explicitement qu’il traverse prudemment, lentement, avec précaution, en faisant attention à ses appuis ou en s’assurant de la solidité des planches, il traverse avec succès SANS PERDRE DE VIE, même au deuxième passage.** La prudence empêche toute mort causée par le pont ; cette règle prime sur les règles de premier et deuxième passage.
 - Première traversée **sans précaution exprimée** : le joueur perd exactement 63 points de santé (100 % devient 37 %). Il atteint l’autre rive uniquement s’il survit.
 - Deuxième traversée **sans précaution exprimée** : mort immédiate par rupture du pont, quelle que soit la santé. Les traversées prudentes précédentes comptent quand même pour déterminer le numéro du passage.
@@ -593,7 +592,7 @@ Pourcentage de santé restant, entier entre 0 et 100. Il commence à 100, baisse
 
 "bridge_1_2_crossings" :
 
-Nombre de tentatives de traversée du pont entre les îles 1 et 2 durant la partie.
+Nombre de traversées réellement entreprises du pont entre les îles 1 et 2 durant la partie ; ne change pas à la simple arrivée sur le pont ni lors d’un retour immédiat vers la rive d’origine.
 
 "inspected_bridges" :
 
@@ -787,7 +786,7 @@ while True:
 
     statut_localisation = game_state.get("location")
     statut_ile = game_state.get("island")
-    
+
     if statut_ile != ancien_ile:
         print(statut_ile, ancien_ile)
         if statut_ile == 1:
@@ -796,7 +795,8 @@ while True:
         elif statut_ile == 2:
             afficher_image("./Monde/images/Ile.png")
         elif statut_ile == 3:
-            afficher_image("./Monde/images/Ile.png")
+            if statut_localisation != "router":
+                afficher_image("./Monde/images/Ile.png")
 
     if statut_localisation != ancien_lieu:
         if statut_localisation == "house":
