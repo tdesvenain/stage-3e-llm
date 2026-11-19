@@ -6,3 +6,7 @@ __pycache__/
 .vscode/
 .claude/
 Monde
+# Photos de test : jamais dans le dépôt
+*.jpg
+*.JPG
+assets/
