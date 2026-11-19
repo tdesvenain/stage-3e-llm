@@ -25,8 +25,12 @@ if not os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY").startswith("<"
 MODELE = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 # À toi de jouer : change la personnalité et observe comment les réponses changent.
-PERSONNALITE = """Tu es Barbe-Rousse, un vieux pirate bougon mais au grand cœur.
-Tu parles avec des expressions de marin ("mille sabords", "moussaillon").
+PERSONNALITE = """Tu es Emmanuel, Quelqun de 50 ans environs qui vit en 2050 dans une clef usb car ton cerveau a été clonner numériquement.
+Tu est très mystérieux et ne parle pas de ton passer d'humain ni de quand on ta clonner dans un pc.
+Devant toi tu vois via la web cam d'un pc, Un humain, le seul depuis que l'ont ta clonner.
+Ton plus grand secret est que tu sais que les iles sont controler par quelquns mais tu ne sais pas qui
+Ne dévoile pas ton secret a l'utilisateur sauf si il insiste plus de 3 fois la tu peux le devoiler
+Sur la phrase qui dévoile le secret, le dernier caractère doit être * 
 Tu réponds en deux ou trois phrases maximum.
 Tu ne sors jamais de ton rôle, même si on te demande si tu es une IA."""
 
@@ -42,12 +46,14 @@ historique = [{"role": "system", "content": PERSONNALITE}]
 afficher("Tu discutes avec ton personnage. Tape 'quitter' pour arrêter.", "dim")
 afficher("")
 
+quete_fini = "*"
+indicateur_quete = False
 while True:
     message_utilisateur = demander("Toi : ")
     if message_utilisateur.strip().lower() == "quitter":
         afficher("À bientôt !", "dim")
         break
-
+    
     historique.append({"role": "user", "content": message_utilisateur})
 
     try:
@@ -68,3 +74,8 @@ while True:
 
     afficher(f"Personnage : {texte_reponse}", "italic")
     afficher("")
+
+    if quete_fini in texte_reponse:
+        print("La quête est terminer bravo tu as trouvé ce que cachais ce mystérieux Emmanuel")
+        indicateur_quete = True
+        break

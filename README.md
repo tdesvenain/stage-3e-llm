@@ -28,6 +28,10 @@ cp .env.example .env
 
 Ensuite, ton encadrant remplit la clé dans `.env`.
 
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+
 ## Ce que tu as au départ
 
 | Fichier | Ce qu'il fait |
@@ -90,13 +94,3 @@ Depuis le jeu, `from afficher_image import afficher_image` puis `afficher_image(
 - Essaie de lui faire révéler son secret par la ruse. Note ce qui marche. Puis renforce
   son prompt et recommence.
 - Quand une amélioration marche, fais un commit avec ton encadrant.
-
-## Pour l'encadrant
-
-- Créez un projet dédié dans votre compte OpenAI avec sa propre clé et un plafond de
-  dépense, puis posez la clé dans `.env`. Révoquez-la à la fin du stage.
-- Le stagiaire ne doit jamais voir la valeur de la clé ; les scripts affichent un message
-  clair si elle manque.
-- Le modèle se change dans `.env` (`OPENAI_MODEL`) sans toucher au code.
-- Une version aboutie du jeu, palier par palier, est dans le dépôt `stage-3e-llm-support`,
-  à ne pas partager avec le stagiaire.
