@@ -57,13 +57,15 @@ historique = [{"role": "system", "content": PERSONNALITE}]
 
 afficher("Tu discutes avec Emmanuel. Essaye de découvrir son secret. Tape 'quitter' pour arrêter.", "dim")
 afficher("")
-
+debug_mode = False
 quete_fini = "*"
 indicateur_quete = False
 debut_game = True 
 while True:
     ancien_ile = game_state.get("island")
     ancien_lieu = game_state.get("location")
+    if debug_mode == True:
+        print(f"Debug mode on, game state : {game_state}\nThe Emmanuel quest is at state : {indicateur_quete}\nThe start game is at state : {debut_game}\n")
     if debut_game == False:
         message_utilisateur = demander("Toi : ")
     elif debut_game == True:
@@ -72,7 +74,12 @@ while True:
     if message_utilisateur.strip().lower() == "quitter":
         afficher("À bientôt !", "dim")
         break
-    
+    if message_utilisateur.strip().lower() == "debugon":
+        debug_mode = True
+        print("Debug mode on")
+    if message_utilisateur.strip().lower() == "debugoff":
+        debug_mode = False
+        print("Debug mode off")
     historique.append({"role": "user", "content": message_utilisateur})
 
     try:
@@ -145,3 +152,6 @@ while True:
             afficher_image("./Monde/images/Pont.png")
         elif statut_localisation == "router":
             afficher_image("./Monde/images/Internet.png")
+
+    if debug_mode == True:
+        print(f"Debug mode end : User is at {statut_localisation} before it was at {ancien_lieu}\nUser is at island {statut_ile} before it was at {ancien_ile}\n")
