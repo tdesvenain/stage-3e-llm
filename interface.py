@@ -11,6 +11,10 @@ au reste du jeu : c'est tout l'intérêt d'avoir regroupé ça ici.
 """
 
 from rich.console import Console
+try:
+    import readline  # donne à input() l'historique avec les flèches et l'édition de ligne
+except ImportError:
+    pass  # Windows n'a pas ce module
 
 console = Console()
 

@@ -55,7 +55,11 @@ client = OpenAI()
 # L'historique commence par les instructions du personnage.
 historique = [{"role": "system", "content": PERSONNALITE}]
 
-afficher("Tu discutes avec Emmanuel. Essaye de découvrir son secret. Tape 'quitter' pour arrêter.", "dim")
+afficher_image("./assets/Debut.png")
+afficher("")
+afficher("Essaye de découvrir les secrets de ce monde. Tape 'quitter' pour arrêter.", "dim")
+afficher("")
+afficher("Tu te trouves sur une petite île flottant au-dessus des nuages. Devant toi, sur le sol, il y a un ordinateur portable. Il te parle.", "italic")
 afficher("")
 debug_mode = False
 quete_fini = "*"
@@ -68,6 +72,8 @@ while True:
         print(f"Debug mode on, game state : {game_state}\nThe Emmanuel quest is at state : {indicateur_quete}\nThe start game is at state : {debut_game}\n")
     if debut_game == False:
         message_utilisateur = demander("Toi : ")
+        if not message_utilisateur.strip():
+            continue  # un message vide ferait répondre le modèle comme un assistant
     elif debut_game == True:
         message_utilisateur = "bonjour"
         debut_game = False
@@ -108,7 +114,7 @@ while True:
 
     historique.append({"role": "assistant", "content": texte_reponse})
 
-    afficher(f"Personnage : {texte_final}", "italic")
+    afficher(texte_final, "italic")
     afficher("")
    
     if quete_fini in texte_reponse:
@@ -119,39 +125,40 @@ while True:
     statut_ile = game_state.get("island")
 
     if statut_ile != ancien_ile:
-        print(statut_ile, ancien_ile)
+        if debug_mode == True:
+            print(statut_ile, ancien_ile)
         if statut_ile == 1:
             if statut_localisation != "island_center":
-                afficher_image("./Monde/images/Ile.png")
+                afficher_image("./assets/Ile1.png")
         elif statut_ile == 2:
-            afficher_image("./Monde/images/Ile.png")
+            afficher_image("./assets/Ile2.png")
         elif statut_ile == 3:
             if statut_localisation != "router":
-                afficher_image("./Monde/images/Ile.png")
+                afficher_image("./assets/Ile3.png")
 
     if statut_localisation != ancien_lieu:
         if statut_localisation == "house":
-            afficher_image("./Monde/images/Maison.png")
+            afficher_image("./assets/Maison.png")
         elif statut_localisation == "island_center":
-            afficher_image("./Monde/images/Ile.png")
+            afficher_image("./assets/Ile1.png")
         elif statut_localisation == "well":
-            afficher_image("./Monde/images/Puit.png")
+            afficher_image("./assets/Puit.png")
         elif statut_localisation == "building_1":
-            afficher_image("./Monde/images/Batiment.png")
+            afficher_image("./assets/Batiment1.png")
         elif statut_localisation == "building_2":
-            afficher_image("./Monde/images/Batiment.png")
+            afficher_image("./assets/Batiment2.png")
         elif statut_localisation == "building_3":
-            afficher_image("./Monde/images/Batiment.png")
+            afficher_image("./assets/Batiment3.png")
         elif statut_localisation == "building_4":
-            afficher_image("./Monde/images/Batiment.png")
+            afficher_image("./assets/Batiment4.png")
         elif statut_localisation == "bridge_1_2":
-            afficher_image("./Monde/images/Pont.png")
+            afficher_image("./assets/Pont.png")
         elif statut_localisation == "bridge_1_3":
-            afficher_image("./Monde/images/Pont.png")
+            afficher_image("./assets/Pont.png")
         elif statut_localisation == "bridge_2_3":
-            afficher_image("./Monde/images/Pont.png")
+            afficher_image("./assets/Pont.png")
         elif statut_localisation == "router":
-            afficher_image("./Monde/images/Internet.png")
+            afficher_image("./assets/Internet.png")
 
     if debug_mode == True:
         print(f"Debug mode end : User is at {statut_localisation} before it was at {ancien_lieu}\nUser is at island {statut_ile} before it was at {ancien_ile}\n")
