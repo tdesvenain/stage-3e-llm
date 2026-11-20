@@ -1,3 +1,5 @@
+Maj a venir/Maj to come
+Prise en charge de toutes les langues/Support for all languages
 # Stage de 3e : fabriquer un jeu avec une IA
 
 Bienvenue ! Cette semaine, tu vas découvrir comment un développeur travaille avec un
